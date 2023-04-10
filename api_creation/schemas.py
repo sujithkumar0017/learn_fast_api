@@ -1,6 +1,21 @@
-from pydantic import BaseModel
+
+ 
+
+from typing import Optional
+from pydantic import BaseModel, EmailStr
 from datetime import datetime
 
+
+class UserCreate(BaseModel):
+          email:EmailStr
+          password:str
+     
+class UserOut(BaseModel):
+          id: int
+          email:EmailStr
+          created_at : datetime
+          class Config:                               
+               orm_mode =True
 
 class PostBase(BaseModel):
      title:str
@@ -9,13 +24,24 @@ class PostBase(BaseModel):
 class PostCreate(PostBase):
      pass
 
-class Post(BaseModel):
+class Post(PostBase):
      id: int
-     title:str
-     content:str
-     published:bool
      created_at : datetime
+     owner_id : int
+     owner:UserOut 
 
                                                  #pydantic model only works with dictionary 
      class Config:                               #class is used to convert the response into dictionary
           orm_mode =True
+
+
+                
+
+class UserLogin(BaseModel):
+      email: EmailStr
+      password: str
+class Token(BaseModel):
+      access_token: str
+      token_type: str
+class TokenData(BaseModel):
+      id: Optional[str]
